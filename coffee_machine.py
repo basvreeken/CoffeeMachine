@@ -1,41 +1,58 @@
-# Stage 1/6
-# print('''Starting to make a coffee
-# Grinding coffee beans
-# Boiling water
-# Mixing boiled water with crushed coffee beans
-# Pouring coffee into the cup
-# Pouring some milk into the cup
-# Coffee is ready!''')
+# contents ((water, milk, coffee beans, money, disposable cups)
+coffee_machine = [400, 540, 120, 550, 9]
 
-# ingredients per cup in ml
-water = 200
-milk = 50
-coffee_beans = 15  # grams
+# products (water, milk, coffee beans, price)
+espresso = (250, 0, 16, 4)
+latte = (350, 75, 20, 7)
+cappuccino = (200, 100, 12, 6)
+products = [espresso, latte, cappuccino]
 
-# Stage 2/6
-# number_of_cups = int(input('Write how many cups of coffee you will need:\n'))
-#
-# print(f'For {number_of_cups} cups of coffee you will need:')
-# print(str(number_of_cups * water) + ' ml of water')
-# print(str(number_of_cups * milk) + ' ml of milk')
-# print(str(number_of_cups * coffee_beans) + ' g of coffee beans')
 
-water_available = int(input('Write how many ml of water the coffee machine '
-                            'has:\n'))
-milk_available = int(input('Write how many ml of milk the coffee machine '
-                           'has:\n'))
-coffee_beans_available = int(input('Write how many grams of coffee beans the '
-                                   'coffee machine has:\n'))
-cups_needed = int(input('Write how many cups of coffee you will need:\n'))
-maximum_capacity = [int(water_available / water), int(milk_available / milk),
-                    int(coffee_beans_available / coffee_beans)]
-maximum_cups = min(maximum_capacity)
+def print_state():
+    print('\nThe coffee machine has:')
+    print(coffee_machine[0], 'of water')
+    print(coffee_machine[1], 'of milk')
+    print(coffee_machine[2], 'of coffee beans')
+    print(coffee_machine[4], 'of disposable cups')
+    print(coffee_machine[3], 'of money')
+    print()
 
-if cups_needed == maximum_cups:
-    print('Yes, I can make that amount of coffee')
-elif cups_needed > maximum_cups:
-    print(f'No, I can make only {maximum_cups} cups of coffee')
-elif cups_needed < maximum_cups:
-    n = maximum_cups - cups_needed
-    print(f'Yes, I can make that amount of coffee (and even {n} more than '
-          f'that)')
+
+def buy(product):
+    for i in range(0, 3):
+        coffee_machine[i] -= product[i]
+    coffee_machine[3] += product[3]
+    coffee_machine[4] -= 1
+    print_state()
+
+
+def fill(water, milk, beans, cups):
+    coffee_machine[0] += water
+    coffee_machine[1] += milk
+    coffee_machine[2] += beans
+    coffee_machine[4] += cups
+    print_state()
+
+
+def take():
+    print(f'I gave you ${coffee_machine[3]}')
+    coffee_machine[3] = 0
+    print_state()
+
+
+print_state()
+action = input('Write action (buy, fill, take):\n')
+
+if action == 'buy':
+    choice = int(input('What do you want to buy? 1 - espresso, 2 - latte, '
+                       '3 - cappuccino: \n'))
+    buy(products[choice - 1])
+elif action == 'fill':
+    water = int(input('Write how many ml of water you want to add:\n'))
+    milk = int(input('Write how many ml of milk you want to add:\n'))
+    beans = int(input('Write how many grams of coffee beans you want to '
+                      'add:\n'))
+    cups = int(input('Write how many ml of coffee cups you want to add:\n'))
+    fill(water, milk, beans, cups)
+elif action == 'take':
+    take()
